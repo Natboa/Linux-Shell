@@ -1,0 +1,85 @@
+ #include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/stat.h>
+
+
+#define BUFF_SIZE 200
+
+
+int main(int argc, char* argv[]){
+	int f1, file_size, wbytes, i;
+	char str[BUFF_SIZE];
+	char ch = argv[2][0], path[BUFF_SIZE] = "../",lastpath[BUFF_SIZE] = "Encryption_File/Adv_Enc/";
+	strcat(lastpath,argv[1]); //lastpath = "Encryption_File/filename.txt"
+	strcat(path,lastpath); // path = "../Encryption_File/filename.txt"
+	
+	
+	//check if file exist or already encrypted
+	if(access(lastpath,F_OK) != 0) {
+		printf("AdvDecryption option not Supported\n");
+		return 1;
+	}
+	
+	//Change premission 
+	if (chmod(lastpath, 0644) == -1) {
+       		 perror("Failed to change permissions");
+        	 close(f1);
+        	 return 1;
+        }
+
+
+	f1 = open(lastpath, O_RDONLY); //First txt file for reading
+	if(f1 == -1){ //File opening error
+		perror("open1");
+		return 1;
+	}
+	//getting length of file
+	file_size = lseek(f1,0,SEEK_END); 
+	lseek(f1,0,0); 
+	
+	//reading from the file
+	if(read(f1, str, file_size) != file_size){
+		perror("f1 reading error!\n");
+		exit(2);
+	}
+	
+	//Decrypting the string
+	for (i = 0; i < strlen(str); i++) {
+		str[i] = str[i] ^ ch;
+	}
+	
+	close(f1);
+	
+	
+	//deleting the file
+	if (remove(lastpath) != 0) {
+		perror("delete error");
+		exit(3);	
+	}
+	//creating the path with the name of the file
+	
+	
+	//creating the file in a the main
+	f1 = open(argv[1], O_WRONLY | O_CREAT, 0644);
+	if(f1 == -1){ //File opening error
+		perror("open1");
+		exit(4);
+	}
+	//writing the encrypted messege to the file
+	wbytes = write(f1, str, file_size);
+	if(wbytes != file_size){
+		perror("tempwrite1\n");
+		exit(5); 
+	}
+
+	close(f1);
+	printf("Mission Complete\n");
+
+	return 0;
+	
+} 
