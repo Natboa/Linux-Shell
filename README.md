@@ -29,7 +29,8 @@ AdvShell> merge a.txt b.txt c.txt
 AdvShell> history
 AdvShell> exit
 ```
-![image](https://github.com/user-attachments/assets/3f0d6ffb-765b-4b03-82b7-ddc3e743b969)
+![image](https://github.com/user-attachments/assets/a0a80ea1-9965-4a3b-9ba4-35895516f8c6)
+
 
 
 ## Compilation & Usage
@@ -39,8 +40,4 @@ To compile and run the shell:
 ```bash
 ./Sys_shell.sh
 ```
-
-## License
-
-This project is for educational purposes and personal learning.
 
